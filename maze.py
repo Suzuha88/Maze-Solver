@@ -1,4 +1,5 @@
 from time import sleep
+import random
 
 from graphics import *
 from cell import Cell
@@ -12,8 +13,11 @@ class Maze():
             num_cols: int,
             cell_width: int,
             cell_height: int,
-            window: Window
+            window: Window,
+            seed: int | None = None
     ) -> None:
+        random.seed(seed)
+
         self.__start = start
         self.__num_rows = num_rows
         self.__num_cols = num_cols
@@ -25,6 +29,8 @@ class Maze():
         self.__create_cells()
 
         self.__break_entrance_and_exit()
+
+        self.__break_walls()
 
     def __create_cells(self) -> None:
         for r in range(self.__num_rows):
@@ -51,3 +57,29 @@ class Maze():
 
         self.__cells[-1][-1].has_bottom_wall = False
         self.__draw_cell(self.__num_rows - 1, self.__num_cols - 1)
+
+    def __break_walls(self) -> None:
+        def is_valid(r, c):
+            return 0 <= r < self.__num_rows and 0 <= c < self.__num_cols and not self.__cells[r][c].visited
+
+        dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        frontier = [(0, 0)]
+
+        self.__cells[0][0].visited = True
+
+        while frontier:
+            r, c = frontier.pop()
+
+            random.shuffle(dirs)
+
+            for dr, dc in dirs:
+                nr, nc = r + dr, c + dc
+                if not is_valid(nr, nc):
+                    continue
+                self.__cells[nr][nc].visited = True
+                self.__cells[nr][nc].connect(self.__cells[r][c])
+
+                frontier.append((nr, nc))
+
+                self.__draw_cell(nr, nc)
+                self.__draw_cell(r, c)
