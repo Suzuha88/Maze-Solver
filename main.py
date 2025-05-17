@@ -1,8 +1,8 @@
-from graphics import Window, Line, Point
+import graphics as g
 
 
 def main() -> None:
-    window = Window(800, 600)
+    window = g.Window(800, 600)
 
     window.wait_for_close()
 
