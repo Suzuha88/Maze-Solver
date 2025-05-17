@@ -1,4 +1,5 @@
 from tkinter import Tk, BOTH, Canvas
+from typing import Self
 
 
 class Point():
@@ -72,3 +73,13 @@ class Cell():
             self.__win.draw_line(Line(Point(p1.x, p1.y), Point(p2.x, p1.y)))
         if self.has_right_wall:
             self.__win.draw_line(Line(Point(p2.x, p1.y), Point(p2.x, p2.y)))
+
+    def draw_move(self, other: Self, undo=False) -> None:
+        color = "gray" if undo else "red"
+
+        start = Point((self.__x1 + self.__x2) // 2,
+                      (self.__y1 + self.__y2) // 2)
+        finish = Point((other.__x1 + other.__x2) // 2,
+                       (other.__y1 + other.__y2) // 2)
+
+        self.__win.draw_line(Line(start, finish), color)
