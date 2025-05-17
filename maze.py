@@ -60,12 +60,12 @@ class Maze():
 
     def __break_walls(self) -> None:
         def is_valid(r, c):
-            return 0 <= r < self.__num_rows and 0 <= c < self.__num_cols and not self.__cells[r][c].visited
+            return 0 <= r < self.__num_rows and 0 <= c < self.__num_cols and not visited[r][c]
 
         dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         frontier = [(0, 0)]
-
-        self.__cells[0][0].visited = True
+        visited = [[False] * self.__num_cols for _ in range(self.__num_rows)]
+        visited[0][0] = True
 
         while frontier:
             r, c = frontier.pop()
@@ -76,7 +76,7 @@ class Maze():
                 nr, nc = r + dr, c + dc
                 if not is_valid(nr, nc):
                     continue
-                self.__cells[nr][nc].visited = True
+                visited[nr][nc] = True
                 self.__cells[nr][nc].connect(self.__cells[r][c])
 
                 frontier.append((nr, nc))
