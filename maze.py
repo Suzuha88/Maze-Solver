@@ -1,4 +1,4 @@
-from time import sleep, time
+from time import sleep
 from collections import deque
 import random
 
@@ -37,8 +37,6 @@ class Maze():
 
         self.__break_walls()
         self.__draw_grid()
-
-        self.__solve()
 
     def __create_cells(self) -> None:
         for _ in range(self.__num_rows):
@@ -126,7 +124,7 @@ class Maze():
             prev_r, prev_c = prev_cells[prev_r][prev_c]
             self.__animate(self.__solve_speed)
 
-    def __solve(self) -> None:
+    def solve(self) -> None:
         dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
         prev_cells = [[(-1, -1)] *

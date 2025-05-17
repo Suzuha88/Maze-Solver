@@ -1,5 +1,4 @@
 from tkinter import Tk, BOTH, Canvas
-from typing import Self
 
 
 class Point():
