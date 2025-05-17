@@ -3,9 +3,9 @@ import maze as m
 
 
 def main() -> None:
-    window = g.Window(800, 600)
+    window = g.Window(1300, 800)
 
-    maze = m.Maze(g.Point(40, 40), 10, 20, 30, 30, window, seed=0)
+    maze = m.Maze(g.Point(40, 40), 20, 40, 30, 30, window, seed=0)
 
     window.wait_for_close()
 
