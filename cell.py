@@ -45,15 +45,13 @@ class Cell():
             self.__window.draw_line(
                 Line(Point(p2.x, p1.y), Point(p2.x, p1.y)), bg_color)
 
-    def draw_move(self, other: Self, undo=False) -> None:
-        color = "gray" if undo else "red"
-
+    def draw_move(self, other: Self, color="red", width=2) -> None:
         start = Point((self.__x1 + self.__x2) // 2,
                       (self.__y1 + self.__y2) // 2)
         finish = Point((other.__x1 + other.__x2) // 2,
                        (other.__y1 + other.__y2) // 2)
 
-        self.__window.draw_line(Line(start, finish), color)
+        self.__window.draw_line(Line(start, finish), color, width)
 
     def connect(self, other: Self) -> None:
         # connect to self.bottom
@@ -73,5 +71,20 @@ class Cell():
             self.has_left_wall = False
             other.has_right_wall = False
 
+        else:
+            raise Exception("Cells aren't 4-connected")
+
+    def is_connected(self, other: Self) -> bool:
+        if self.__x1 == other.__x1 and self.__y2 == other.__y1:
+            return not self.has_bottom_wall and not other.has_top_wall
+        # connect to self.top
+        elif self.__x1 == other.__x1 and self.__y1 == other.__y2:
+            return not self.has_top_wall and not other.has_bottom_wall
+        # connect to self.right
+        elif self.__x2 == other.__x1 and self.__y1 == other.__y1:
+            return not self.has_right_wall and not other.has_left_wall
+        # connect to self.left
+        elif self.__x1 == other.__x2 and self.__y1 == other.__y1:
+            return not self.has_left_wall and not other.has_right_wall
         else:
             raise Exception("Cells aren't 4-connected")
