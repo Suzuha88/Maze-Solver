@@ -8,6 +8,8 @@ class Cell():
         self.has_top_wall = True
         self.has_right_wall = True
 
+        self.visited = False
+
         self.__x1 = -1
         self.__x2 = -1
         self.__y1 = -1
@@ -54,3 +56,24 @@ class Cell():
                        (other.__y1 + other.__y2) // 2)
 
         self.__window.draw_line(Line(start, finish), color)
+
+    def connect(self, other: Self) -> None:
+        # connect to self.bottom
+        if self.__x1 == other.__x1 and self.__y2 == other.__y1:
+            self.has_bottom_wall = False
+            other.has_top_wall = False
+        # connect to self.top
+        elif self.__x1 == other.__x1 and self.__y1 == other.__y2:
+            self.has_top_wall = False
+            other.has_bottom_wall = False
+        # connect to self.right
+        elif self.__x2 == other.__x1 and self.__y1 == other.__y1:
+            self.has_right_wall = False
+            other.has_left_wall = False
+        # connect to self.left
+        elif self.__x1 == other.__x2 and self.__y1 == other.__y1:
+            self.has_left_wall = False
+            other.has_right_wall = False
+
+        else:
+            raise Exception("Cells aren't 4-connected")
