@@ -19,7 +19,7 @@ class Cell():
         self.__x1, self.__y1 = p1.x, p1.y
         self.__x2, self.__y2 = p2.x, p2.y
 
-        bg_color = self.__window.__canvas["background"]
+        bg_color = self.__window.get_bg_color()
 
         if self.has_left_wall:
             self.__window.draw_line(Line(Point(p1.x, p1.y), Point(p1.x, p2.y)))

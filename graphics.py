@@ -20,16 +20,21 @@ class Line():
 
 
 class Window():
-    def __init__(self, width: int, height: int) -> None:
+    def __init__(self, width: int, height: int, bg_color="white") -> None:
         self.__root = Tk()
         self.__root.title('Maze Solver')
         self.__root.protocol("WM_DELETE_WINDOW", self.close)
 
+        self.__bg_color = bg_color
+
         self.__canvas = Canvas(
-            self.__root, bg="white", width=width, height=height)
+            self.__root, bg=bg_color, width=width, height=height)
         self.__canvas.pack(fill=BOTH, expand=1)
 
         self.__running = False
+
+    def get_bg_color(self) -> str:
+        return self.__bg_color
 
     def redraw(self) -> None:
         self.__root.update_idletasks()
