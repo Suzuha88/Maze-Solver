@@ -124,7 +124,7 @@ class Maze():
             prev_r, prev_c = prev_cells[prev_r][prev_c]
             self.__animate(self.__solve_speed)
 
-    def solve(self) -> None:
+    def solve(self, algorithm: str = "dfs") -> None:
         dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
         prev_cells = [[(-1, -1)] *
@@ -134,9 +134,69 @@ class Maze():
         visited[0][0] = True
 
         frontier = deque([(0, 0)])
+        if algorithm == "bfs":
+            self.__solve_bfs(dirs, prev_cells, visited, frontier)
+            return
+        if algorithm == "dfs":
+            self.__solve_dfs(dirs, prev_cells, visited, frontier)
+            return
+
+    def __solve_dfs(self,
+                    dirs: list[tuple[int, int]],
+                    prev_cells: list[list[tuple[int, int]]],
+                    visited: list[list[bool]],
+                    frontier: deque[tuple[int, int]]
+                    ) -> None:
+        while frontier:
+            r, c = frontier.pop()
+            is_dead_end = True
+
+            prev = prev_cells[r][c]
+            if prev != (-1, -1):
+                self.__cells[r][c].draw_move(self.__cells[prev[0]][prev[1]])
+                self.__animate(self.__solve_speed)
+
+            if r == self.__num_rows - 1 and c == self.__num_cols - 1:
+                self.__backtrack((r, c), (0, 0), prev_cells)
+                return
+
+            # random.shuffle(dirs)
+
+            for dr, dc in dirs:
+                nr, nc = r + dr, c + dc
+                if (
+                        not self.__is_valid_cell(nr, nc) or
+                        not self.__cells[r][c].is_connected(self.__cells[nr][nc]) or
+                        visited[nr][nc]
+                ):
+                    continue
+                is_dead_end = False
+
+                prev_cells[nr][nc] = (r, c)
+                visited[nr][nc] = True
+
+                frontier.append((nr, nc))
+
+            if is_dead_end and frontier:
+                next_path = frontier[-1]
+                target = prev_cells[next_path[0]][next_path[1]]
+                self.__backtrack(
+                    (r, c), target, prev_cells, color="gray", width=3)
+
+    def __solve_bfs(self,
+                    dirs: list[tuple[int, int]],
+                    prev_cells: list[list[tuple[int, int]]],
+                    visited: list[list[bool]],
+                    frontier: deque[tuple[int, int]]
+                    ) -> None:
 
         while frontier:
             r, c = frontier.popleft()
+
+            prev = prev_cells[r][c]
+            if prev != (-1, -1):
+                self.__cells[r][c].draw_move(self.__cells[prev[0]][prev[1]])
+                self.__animate(self.__solve_speed)
 
             if r == self.__num_rows - 1 and c == self.__num_cols - 1:
                 self.__backtrack((r, c), (0, 0), prev_cells)
@@ -155,6 +215,3 @@ class Maze():
                 visited[nr][nc] = True
 
                 frontier.append((nr, nc))
-
-                self.__cells[r][c].draw_move(self.__cells[nr][nc])
-                self.__animate(self.__solve_speed)
